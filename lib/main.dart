@@ -1,0 +1,41 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:home_ai/app.dart';
+import 'package:home_ai/core/config/app_config.dart';
+import 'package:home_ai/core/l10n/app_locales.dart';
+import 'package:home_ai/core/database/app_database.dart';
+import 'package:home_ai/firebase_options.dart';
+import 'package:home_ai/presentation/services/gemini_key_service.dart';
+import 'package:home_ai/core/service/premium/premium_service.dart';
+import 'package:home_ai/features/gallery/data/gallery_repository.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (error) {
+    debugPrint('Firebase init skipped: $error');
+  }
+
+  await GeminiKeyService.instance.init();
+  await PremiumService.instance.init();
+  await AppDatabase.initialize();
+  GalleryRepository.initialize(AppDatabase.instance);
+  EasyLocalization.logger.enableLevels = [];
+
+  runApp(
+    EasyLocalization(
+      supportedLocales: AppLocales.supported,
+      path: AppConfig.translationsPath,
+      fallbackLocale: AppLocales.fallback,
+      saveLocale: true,
+      useOnlyLangCode: true,
+      child: const App(),
+    ),
+  );
+}

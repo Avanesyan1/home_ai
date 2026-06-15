@@ -1,0 +1,67 @@
+name: home_ai
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  easy_localization: ^3.0.8
+  auto_route: ^11.1.0
+  url_launcher: ^6.3.2
+  http: ^1.6.0
+  image_picker: ^1.2.2
+  share_plus: ^13.1.0
+  path_provider: ^2.1.5
+  image_gallery_saver: ^2.0.3
+  drift: ^2.28.0
+  sqlite3_flutter_libs: ^0.5.34
+  path: ^1.9.1
+  shared_preferences: ^2.5.3
+  firebase_core: ^4.10.0
+  firebase_remote_config: ^6.5.2
+  purchases_flutter: ^10.2.3
+  flutter_screenutil: ^5.9.3
+  flutter_secure_storage: ^10.3.1
+  package_info_plus: ^10.1.0
+  flutter_animate: ^4.5.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+  auto_route_generator: ^10.5.0
+  build_runner: ^2.15.0
+  drift_dev: ^2.28.0
+  flutter_launcher_icons: ^0.14.4
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+    - assets/translations/
+    - assets/images/cards/interior_before.jpg
+    - assets/images/cards/interior_after.jpg
+    - assets/images/cards/exterior_before.jpg
+    - assets/images/cards/exterior_after.jpg
+    - assets/images/cards/garden_before.jpg
+    - assets/images/cards/garden_after.jpg
+    - assets/images/cards/floor_before.png
+    - assets/images/cards/floor_after.png
+    - assets/styles/interior/
+    - assets/styles/exterior/
+    - assets/styles/garden/
+    - assets/styles/floor/
+
+flutter_launcher_icons:
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/icon.png"
