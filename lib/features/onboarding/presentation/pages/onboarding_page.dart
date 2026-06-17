@@ -278,13 +278,21 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   top: 0,
                   right: AppSpacing.screenHorizontal - 4,
                   child: CupertinoButton(
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(6),
                     minimumSize: Size.zero,
                     onPressed: _finishOnboarding,
-                    child: Icon(
-                      CupertinoIcons.xmark,
-                      size: 14,
-                      color: AppColors.textTertiary.withValues(alpha: 0.45),
+                    child: Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceMuted.withValues(alpha: 0.9),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        CupertinoIcons.xmark,
+                        size: 15,
+                        color: AppColors.textSecondary.withValues(alpha: 0.75),
+                      ),
                     ),
                   ),
                 ),
