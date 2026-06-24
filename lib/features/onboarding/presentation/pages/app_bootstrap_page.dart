@@ -22,7 +22,13 @@ class _AppBootstrapPageState extends State<AppBootstrapPage> {
   }
 
   Future<void> _redirect() async {
-    await AppUpdateService.instance.check();
+    try {
+      await AppUpdateService.instance.check().timeout(
+            const Duration(seconds: 6),
+          );
+    } catch (_) {
+      // Never block startup on a slow/failed remote check (fail-open).
+    }
     if (!mounted) {
       return;
     }
