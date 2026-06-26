@@ -1,0 +1,4 @@
+"CFBundleDisplayName" = "Home AI";
+"NSCameraUsageDescription" = "Доступ к камере нужен для съёмки фото под редизайн.";
+"NSPhotoLibraryUsageDescription" = "Доступ к фото нужен для загрузки изображений под редизайн.";
+"NSPhotoLibraryAddUsageDescription" = "Доступ к галерее нужен для сохранения сгенерированных дизайнов.";
