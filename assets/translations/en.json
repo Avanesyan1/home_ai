@@ -30,6 +30,8 @@
     "hold_to_compare_hint": "Press and hold to see the original photo",
     "generating_title": "Generating your design",
     "generating_subtitle": "This may take up to a minute. Please wait.",
+    "generating_progress": "{percent}%",
+    "regenerate": "Try another style",
     "result_title": "Result",
     "error": "Something went wrong while generating",
     "try_again": "Try again",
@@ -126,7 +128,11 @@
     "not_found": "Design not found",
     "delete_title": "Delete design?",
     "delete_message": "This will remove the design from your gallery.",
-    "delete_confirm": "Delete"
+    "delete_confirm": "Delete",
+    "all": "All",
+    "favorites": "Favorites",
+    "favorites_empty_title": "No favorites yet",
+    "favorites_empty_subtitle": "Tap the heart on a design to save it here"
   },
   "settings": {
     "title": "Settings",
@@ -158,6 +164,10 @@
     "title": "Update required",
     "message": "A new version of the app is available. Please update to continue.",
     "button": "Update"
+  },
+  "notification": {
+    "design_ready_title": "Design ready!",
+    "design_ready_body": "Your redesign is complete. Open the app to see it."
   },
   "common": {
     "cancel": "Cancel",

@@ -65,7 +65,9 @@
     "style_tile": "瓷砖",
     "style_marble": "大理石",
     "style_concrete": "混凝土",
-    "style_carpet": "地毯"
+    "style_carpet": "地毯",
+    "generating_progress": "{percent}%",
+    "regenerate": "尝试其他风格"
   },
   "onboarding": {
     "title": "用 AI 改造你的空间",
@@ -126,7 +128,11 @@
     "not_found": "未找到设计",
     "delete_title": "删除设计？",
     "delete_message": "将从相册中移除此设计。",
-    "delete_confirm": "删除"
+    "delete_confirm": "删除",
+    "all": "全部",
+    "favorites": "收藏",
+    "favorites_empty_title": "暂无收藏",
+    "favorites_empty_subtitle": "点击心形图标将设计保存到这里"
   },
   "settings": {
     "title": "设置",
@@ -164,5 +170,9 @@
     "ok": "确定",
     "error": "错误",
     "link_open_failed": "无法打开链接。"
+  },
+  "notification": {
+    "design_ready_title": "设计完成！",
+    "design_ready_body": "您的重新设计已完成。打开应用查看。"
   }
 }

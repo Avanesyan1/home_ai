@@ -65,7 +65,9 @@
     "style_tile": "Azulejo",
     "style_marble": "Mármore",
     "style_concrete": "Concreto",
-    "style_carpet": "Carpete"
+    "style_carpet": "Carpete",
+    "generating_progress": "{percent}%",
+    "regenerate": "Tentar outro estilo"
   },
   "onboarding": {
     "title": "Transforme seu espaço com IA",
@@ -126,7 +128,11 @@
     "not_found": "Design não encontrado",
     "delete_title": "Excluir design?",
     "delete_message": "O design será removido da sua galeria.",
-    "delete_confirm": "Excluir"
+    "delete_confirm": "Excluir",
+    "all": "Todos",
+    "favorites": "Favoritos",
+    "favorites_empty_title": "Nenhum favorito ainda",
+    "favorites_empty_subtitle": "Toque no coração para salvar um design aqui"
   },
   "settings": {
     "title": "Ajustes",
@@ -164,5 +170,9 @@
     "ok": "OK",
     "error": "Erro",
     "link_open_failed": "Não foi possível abrir o link."
+  },
+  "notification": {
+    "design_ready_title": "Design pronto!",
+    "design_ready_body": "Seu redesign está completo. Abra o app para ver."
   }
 }

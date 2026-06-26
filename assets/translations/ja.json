@@ -65,7 +65,9 @@
     "style_tile": "タイル",
     "style_marble": "大理石",
     "style_concrete": "コンクリート",
-    "style_carpet": "カーペット"
+    "style_carpet": "カーペット",
+    "generating_progress": "{percent}%",
+    "regenerate": "別のスタイルを試す"
   },
   "onboarding": {
     "title": "AIで空間を変えよう",
@@ -126,7 +128,11 @@
     "not_found": "デザインが見つかりません",
     "delete_title": "デザインを削除しますか？",
     "delete_message": "ギャラリーからデザインが削除されます。",
-    "delete_confirm": "削除"
+    "delete_confirm": "削除",
+    "all": "すべて",
+    "favorites": "お気に入り",
+    "favorites_empty_title": "お気に入りはまだありません",
+    "favorites_empty_subtitle": "ハートをタップしてデザインを保存"
   },
   "settings": {
     "title": "設定",
@@ -164,5 +170,9 @@
     "ok": "OK",
     "error": "エラー",
     "link_open_failed": "リンクを開けませんでした。"
+  },
+  "notification": {
+    "design_ready_title": "デザイン完成！",
+    "design_ready_body": "リデザインが完了しました。アプリを開いて確認してください。"
   }
 }

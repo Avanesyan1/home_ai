@@ -10,14 +10,22 @@ import 'package:home_ai/core/theme/app_animations.dart';
 import 'package:home_ai/core/theme/app_colors.dart';
 import 'package:home_ai/core/theme/app_spacing.dart';
 import 'package:home_ai/core/theme/app_text_styles.dart';
+import 'package:home_ai/core/utils/app_haptics.dart';
 import 'package:home_ai/core/widgets/app_background.dart';
 import 'package:home_ai/features/gallery/data/gallery_repository.dart';
 import 'package:home_ai/features/gallery/domain/entities/saved_design.dart';
 import 'package:home_ai/features/gallery/presentation/widgets/gallery_grid_item.dart';
 
 @RoutePage()
-class GalleryPage extends StatelessWidget {
+class GalleryPage extends StatefulWidget {
   const GalleryPage({super.key});
+
+  @override
+  State<GalleryPage> createState() => _GalleryPageState();
+}
+
+class _GalleryPageState extends State<GalleryPage> {
+  bool _showFavoritesOnly = false;
 
   @override
   Widget build(BuildContext context) {
@@ -38,55 +46,106 @@ class GalleryPage extends StatelessWidget {
       child: AppBackground(
         child: SafeArea(
           bottom: false,
-          child: StreamBuilder<List<SavedDesign>>(
-            stream: GalleryRepository.instance.watchAll(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting &&
-                  !snapshot.hasData) {
-                return const Center(child: CupertinoActivityIndicator());
-              }
-
-              final designs = snapshot.data ?? const [];
-
-              if (designs.isEmpty) {
-                return _EmptyState();
-              }
-
-              return GridView.builder(
-                physics: const BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics(),
-                ),
+          child: Column(
+            children: [
+              Padding(
                 padding: const EdgeInsets.fromLTRB(
                   AppSpacing.screenHorizontal,
-                  AppSpacing.lg,
+                  AppSpacing.md,
                   AppSpacing.screenHorizontal,
-                  AppSpacing.xxl,
+                  0,
                 ),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: AppSpacing.md,
-                  crossAxisSpacing: AppSpacing.md,
-                  childAspectRatio: 1,
-                ),
-                itemCount: designs.length,
-                itemBuilder: (context, index) {
-                  final design = designs[index];
-                  return GalleryGridItem(
-                    design: design,
-                    onTap: () {
-                      unawaited(
-                        AnalyticsService.instance.logGalleryItemOpened(
-                          design.id,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: CupertinoSlidingSegmentedControl<bool>(
+                    groupValue: _showFavoritesOnly,
+                    children: {
+                      false: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: AppSpacing.sm,
                         ),
-                      );
-                      context.router.push(
-                        GalleryDetailRoute(designId: design.id),
-                      );
+                        child: Text(LocaleKeys.galleryAll.tr()),
+                      ),
+                      true: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: AppSpacing.sm,
+                        ),
+                        child: Text(LocaleKeys.galleryFavorites.tr()),
+                      ),
                     },
-                  ).animateStagger(index, stepMs: 60);
-                },
-              );
-            },
+                    onValueChanged: (value) {
+                      if (value == null) {
+                        return;
+                      }
+                      AppHaptics.selection();
+                      setState(() => _showFavoritesOnly = value);
+                    },
+                  ),
+                ),
+              ),
+              Expanded(
+                child: StreamBuilder<List<SavedDesign>>(
+                  stream: GalleryRepository.instance.watchAll(
+                    favoritesOnly: _showFavoritesOnly,
+                  ),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting &&
+                        !snapshot.hasData) {
+                      return const Center(child: CupertinoActivityIndicator());
+                    }
+
+                    final designs = snapshot.data ?? const [];
+
+                    if (designs.isEmpty) {
+                      return _EmptyState(showFavoritesOnly: _showFavoritesOnly);
+                    }
+
+                    return GridView.builder(
+                      physics: const BouncingScrollPhysics(
+                        parent: AlwaysScrollableScrollPhysics(),
+                      ),
+                      padding: const EdgeInsets.fromLTRB(
+                        AppSpacing.screenHorizontal,
+                        AppSpacing.lg,
+                        AppSpacing.screenHorizontal,
+                        AppSpacing.xxl,
+                      ),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: AppSpacing.md,
+                        crossAxisSpacing: AppSpacing.md,
+                        childAspectRatio: 1,
+                      ),
+                      itemCount: designs.length,
+                      itemBuilder: (context, index) {
+                        final design = designs[index];
+                        return GalleryGridItem(
+                          design: design,
+                          onTap: () {
+                            unawaited(
+                              AnalyticsService.instance.logGalleryItemOpened(
+                                design.id,
+                              ),
+                            );
+                            context.router.push(
+                              GalleryDetailRoute(designId: design.id),
+                            );
+                          },
+                          onFavoriteToggle: () async {
+                            AppHaptics.light();
+                            await GalleryRepository.instance.toggleFavorite(
+                              design.id,
+                              !design.isFavorite,
+                            );
+                          },
+                        ).animateStagger(index, stepMs: 60);
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -95,6 +154,10 @@ class GalleryPage extends StatelessWidget {
 }
 
 class _EmptyState extends StatelessWidget {
+  const _EmptyState({required this.showFavoritesOnly});
+
+  final bool showFavoritesOnly;
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -103,20 +166,28 @@ class _EmptyState extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              CupertinoIcons.photo_on_rectangle,
+            Icon(
+              showFavoritesOnly
+                  ? CupertinoIcons.heart
+                  : CupertinoIcons.photo_on_rectangle,
               size: 56,
               color: AppColors.textTertiary,
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
-              LocaleKeys.galleryEmptyTitle.tr(),
+              (showFavoritesOnly
+                      ? LocaleKeys.galleryFavoritesEmptyTitle
+                      : LocaleKeys.galleryEmptyTitle)
+                  .tr(),
               style: AppTextStyles.title,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: AppSpacing.sm),
             Text(
-              LocaleKeys.galleryEmptySubtitle.tr(),
+              (showFavoritesOnly
+                      ? LocaleKeys.galleryFavoritesEmptySubtitle
+                      : LocaleKeys.galleryEmptySubtitle)
+                  .tr(),
               style: AppTextStyles.body,
               textAlign: TextAlign.center,
             ),

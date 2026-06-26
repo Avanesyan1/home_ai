@@ -10,11 +10,14 @@ import 'package:home_ai/core/router/app_router.dart';
 import 'package:home_ai/core/service/ai/ai_service.dart';
 import 'package:home_ai/core/service/analytics/analytics_service.dart';
 import 'package:home_ai/core/service/generation/generation_limit_service.dart';
+import 'package:home_ai/core/service/notifications/local_notification_service.dart';
+import 'package:home_ai/core/service/review/app_review_service.dart';
 import 'package:home_ai/core/theme/app_animations.dart';
 import 'package:home_ai/core/theme/app_colors.dart';
 import 'package:home_ai/core/theme/app_spacing.dart';
 import 'package:home_ai/core/theme/app_text_styles.dart';
 import 'package:home_ai/core/helpers/gallery_helper.dart';
+import 'package:home_ai/core/utils/app_haptics.dart';
 import 'package:home_ai/features/gallery/data/gallery_repository.dart';
 import 'package:home_ai/features/redesign/domain/entities/redesign_category.dart';
 import 'package:home_ai/features/redesign/domain/entities/redesign_draft.dart';
@@ -45,6 +48,8 @@ class RedesignGeneratingPage extends StatefulWidget {
 
 class _RedesignGeneratingPageState extends State<RedesignGeneratingPage> {
   String? _errorMessage;
+  double _progress = 0;
+  Timer? _progressTimer;
 
   @override
   void initState() {
@@ -56,11 +61,35 @@ class _RedesignGeneratingPageState extends State<RedesignGeneratingPage> {
         styleId: widget.styleId,
       ),
     );
+    _startProgressSimulation();
     _generate();
   }
 
+  @override
+  void dispose() {
+    _progressTimer?.cancel();
+    super.dispose();
+  }
+
+  void _startProgressSimulation() {
+    _progressTimer = Timer.periodic(const Duration(milliseconds: 450), (_) {
+      if (!mounted || _errorMessage != null) {
+        return;
+      }
+
+      setState(() {
+        if (_progress < 0.92) {
+          _progress += 0.025 + (0.92 - _progress) * 0.04;
+        }
+      });
+    });
+  }
+
   Future<void> _generate() async {
-    setState(() => _errorMessage = null);
+    setState(() {
+      _errorMessage = null;
+      _progress = 0;
+    });
 
     try {
       final styles = RedesignOptions.stylesFor(widget.category);
@@ -126,6 +155,21 @@ class _RedesignGeneratingPageState extends State<RedesignGeneratingPage> {
       unawaited(
         AnalyticsService.instance.logGenerationSuccess(widget.category.name),
       );
+      unawaited(AppReviewService.instance.onGenerationSuccess());
+
+      if (LocalNotificationService.instance.shouldNotifyOnComplete) {
+        unawaited(LocalNotificationService.instance.showDesignReady());
+      }
+
+      if (!mounted) {
+        return;
+      }
+
+      _progressTimer?.cancel();
+      setState(() => _progress = 1);
+      AppHaptics.success();
+
+      await Future<void>.delayed(const Duration(milliseconds: 300));
 
       if (!mounted) {
         return;
@@ -139,6 +183,8 @@ class _RedesignGeneratingPageState extends State<RedesignGeneratingPage> {
         ),
       );
     } catch (error) {
+      _progressTimer?.cancel();
+
       if (!mounted) {
         return;
       }
@@ -175,6 +221,8 @@ class _RedesignGeneratingPageState extends State<RedesignGeneratingPage> {
   }
 
   Widget _buildLoading() {
+    final percent = (_progress * 100).round().clamp(0, 100);
+
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
       child: Column(
@@ -191,7 +239,14 @@ class _RedesignGeneratingPageState extends State<RedesignGeneratingPage> {
             ),
           ).animateFadeScale().animateShimmer(),
           const SizedBox(height: AppSpacing.xl),
-          const CupertinoActivityIndicator(radius: 18).animatePulse(),
+          _ProgressBar(progress: _progress),
+          const SizedBox(height: AppSpacing.md),
+          Text(
+            LocaleKeys.redesignGeneratingProgress.tr(
+              namedArgs: {'percent': '$percent'},
+            ),
+            style: AppTextStyles.bodyMedium,
+          ),
           const SizedBox(height: AppSpacing.lg),
           Text(
             LocaleKeys.redesignGeneratingTitle.tr(),
@@ -249,7 +304,10 @@ class _RedesignGeneratingPageState extends State<RedesignGeneratingPage> {
                 child: CupertinoButton(
                   color: AppColors.primary,
                   borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-                  onPressed: _generate,
+                  onPressed: () {
+                    _startProgressSimulation();
+                    _generate();
+                  },
                   child: Text(
                     LocaleKeys.redesignTryAgain.tr(),
                     style: AppTextStyles.bodyMedium.copyWith(
@@ -261,6 +319,33 @@ class _RedesignGeneratingPageState extends State<RedesignGeneratingPage> {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _ProgressBar extends StatelessWidget {
+  const _ProgressBar({required this.progress});
+
+  final double progress;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+      child: SizedBox(
+        height: 6,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            const ColoredBox(color: AppColors.surfaceMuted),
+            FractionallySizedBox(
+              alignment: Alignment.centerLeft,
+              widthFactor: progress.clamp(0.0, 1.0),
+              child: const ColoredBox(color: AppColors.primary),
+            ),
+          ],
+        ),
       ),
     );
   }

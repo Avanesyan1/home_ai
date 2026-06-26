@@ -8,7 +8,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:home_ai/core/helpers/gallery_helper.dart';
 import 'package:home_ai/core/helpers/share_helper.dart';
 import 'package:home_ai/core/l10n/locale_keys.dart';
+import 'package:home_ai/core/router/app_router.dart';
 import 'package:home_ai/core/service/analytics/analytics_service.dart';
+import 'package:home_ai/core/utils/app_haptics.dart';
 import 'package:home_ai/core/theme/app_colors.dart';
 import 'package:home_ai/core/theme/app_decorations.dart';
 import 'package:home_ai/core/theme/app_spacing.dart';
@@ -54,6 +56,51 @@ class _GalleryDetailPageState extends State<GalleryDetailPage> {
       _design = design;
       _isLoading = false;
     });
+  }
+
+  Future<void> _toggleFavorite() async {
+    final design = _design;
+    if (design == null) {
+      return;
+    }
+
+    AppHaptics.light();
+    final nextValue = !design.isFavorite;
+    await GalleryRepository.instance.toggleFavorite(design.id, nextValue);
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _design = SavedDesign(
+        id: design.id,
+        category: design.category,
+        beforePath: design.beforePath,
+        afterPath: design.afterPath,
+        styleId: design.styleId,
+        paletteId: design.paletteId,
+        wishes: design.wishes,
+        createdAt: design.createdAt,
+        isFavorite: nextValue,
+      );
+    });
+  }
+
+  void _regenerate() {
+    final design = _design;
+    if (design == null) {
+      return;
+    }
+
+    AppHaptics.light();
+    context.router.push(
+      RedesignFlowRoute(
+        category: design.category,
+        initialImagePath: design.beforePath,
+        initialWishes: design.wishes.isEmpty ? null : design.wishes,
+      ),
+    );
   }
 
   Future<void> _shareImage(BuildContext anchorContext) async {
@@ -189,13 +236,30 @@ class _GalleryDetailPageState extends State<GalleryDetailPage> {
         automaticallyImplyLeading: false,
         trailing: _design == null
             ? null
-            : CupertinoButton(
-                padding: EdgeInsets.zero,
-                onPressed: _confirmDelete,
-                child: const Icon(
-                  CupertinoIcons.delete,
-                  color: AppColors.textSecondary,
-                ),
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: _toggleFavorite,
+                    child: Icon(
+                      _design!.isFavorite
+                          ? CupertinoIcons.heart_fill
+                          : CupertinoIcons.heart,
+                      color: _design!.isFavorite
+                          ? AppColors.primary
+                          : AppColors.textSecondary,
+                    ),
+                  ),
+                  CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: _confirmDelete,
+                    child: const Icon(
+                      CupertinoIcons.delete,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ],
               ),
       ),
       child: SafeArea(
@@ -246,6 +310,16 @@ class _GalleryDetailPageState extends State<GalleryDetailPage> {
                 ),
               ),
             ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          CupertinoButton(
+            color: AppColors.surfaceMuted,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+            onPressed: _regenerate,
+            child: Text(
+              LocaleKeys.redesignRegenerate.tr(),
+              style: AppTextStyles.bodyMedium,
+            ),
           ),
         ],
       ),

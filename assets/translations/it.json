@@ -65,7 +65,9 @@
     "style_tile": "Piastrella",
     "style_marble": "Marmo",
     "style_concrete": "Cemento",
-    "style_carpet": "Moquette"
+    "style_carpet": "Moquette",
+    "generating_progress": "{percent}%",
+    "regenerate": "Prova un altro stile"
   },
   "onboarding": {
     "title": "Trasforma il tuo spazio con l'IA",
@@ -126,7 +128,11 @@
     "not_found": "Design non trovato",
     "delete_title": "Eliminare il design?",
     "delete_message": "Il design verrà rimosso dalla galleria.",
-    "delete_confirm": "Elimina"
+    "delete_confirm": "Elimina",
+    "all": "Tutti",
+    "favorites": "Preferiti",
+    "favorites_empty_title": "Nessun preferito",
+    "favorites_empty_subtitle": "Tocca il cuore su un design per salvarlo qui"
   },
   "settings": {
     "title": "Impostazioni",
@@ -164,5 +170,9 @@
     "ok": "OK",
     "error": "Errore",
     "link_open_failed": "Impossibile aprire il link."
+  },
+  "notification": {
+    "design_ready_title": "Design pronto!",
+    "design_ready_body": "Il tuo redesign è completo. Apri l'app per vederlo."
   }
 }

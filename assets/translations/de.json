@@ -65,7 +65,9 @@
     "style_tile": "Fliese",
     "style_marble": "Marmor",
     "style_concrete": "Beton",
-    "style_carpet": "Teppich"
+    "style_carpet": "Teppich",
+    "generating_progress": "{percent}%",
+    "regenerate": "Anderen Stil ausprobieren"
   },
   "onboarding": {
     "title": "Verwandle deinen Raum mit KI",
@@ -126,7 +128,11 @@
     "not_found": "Design nicht gefunden",
     "delete_title": "Design löschen?",
     "delete_message": "Das Design wird aus deiner Galerie entfernt.",
-    "delete_confirm": "Löschen"
+    "delete_confirm": "Löschen",
+    "all": "Alle",
+    "favorites": "Favoriten",
+    "favorites_empty_title": "Noch keine Favoriten",
+    "favorites_empty_subtitle": "Tippe auf das Herz, um ein Design hier zu speichern"
   },
   "settings": {
     "title": "Einstellungen",
@@ -164,5 +170,9 @@
     "ok": "OK",
     "error": "Fehler",
     "link_open_failed": "Link konnte nicht geöffnet werden."
+  },
+  "notification": {
+    "design_ready_title": "Design fertig!",
+    "design_ready_body": "Dein Redesign ist fertig. Öffne die App, um es anzusehen."
   }
 }

@@ -65,7 +65,9 @@
     "style_tile": "타일",
     "style_marble": "대리석",
     "style_concrete": "콘크리트",
-    "style_carpet": "카펫"
+    "style_carpet": "카펫",
+    "generating_progress": "{percent}%",
+    "regenerate": "다른 스타일 시도"
   },
   "onboarding": {
     "title": "AI로 공간을 변화시키세요",
@@ -126,7 +128,11 @@
     "not_found": "디자인을 찾을 수 없습니다",
     "delete_title": "디자인을 삭제할까요?",
     "delete_message": "갤러리에서 디자인이 제거됩니다.",
-    "delete_confirm": "삭제"
+    "delete_confirm": "삭제",
+    "all": "전체",
+    "favorites": "즐겨찾기",
+    "favorites_empty_title": "즐겨찾기 없음",
+    "favorites_empty_subtitle": "하트를 눌러 디자인을 저장하세요"
   },
   "settings": {
     "title": "설정",
@@ -164,5 +170,9 @@
     "ok": "확인",
     "error": "오류",
     "link_open_failed": "링크를 열 수 없습니다."
+  },
+  "notification": {
+    "design_ready_title": "디자인 완료!",
+    "design_ready_body": "리디자인이 완료되었습니다. 앱을 열어 확인하세요."
   }
 }

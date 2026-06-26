@@ -65,7 +65,9 @@
     "style_tile": "Fayans",
     "style_marble": "Mermer",
     "style_concrete": "Beton",
-    "style_carpet": "Halı"
+    "style_carpet": "Halı",
+    "generating_progress": "%{percent}",
+    "regenerate": "Başka stil dene"
   },
   "onboarding": {
     "title": "Yapay zeka ile mekanınızı dönüştürün",
@@ -126,7 +128,11 @@
     "not_found": "Tasarım bulunamadı",
     "delete_title": "Tasarım silinsin mi?",
     "delete_message": "Tasarım galerinizden kaldırılacak.",
-    "delete_confirm": "Sil"
+    "delete_confirm": "Sil",
+    "all": "Tümü",
+    "favorites": "Favoriler",
+    "favorites_empty_title": "Henüz favori yok",
+    "favorites_empty_subtitle": "Bir tasarımı buraya kaydetmek için kalbe dokunun"
   },
   "settings": {
     "title": "Ayarlar",
@@ -164,5 +170,9 @@
     "ok": "Tamam",
     "error": "Hata",
     "link_open_failed": "Bağlantı açılamadı."
+  },
+  "notification": {
+    "design_ready_title": "Tasarım hazır!",
+    "design_ready_body": "Yeniden tasarımınız tamamlandı. Görmek için uygulamayı açın."
   }
 }

@@ -70,6 +70,11 @@ abstract final class LocaleKeys {
   static const String galleryDeleteTitle = 'gallery.delete_title';
   static const String galleryDeleteMessage = 'gallery.delete_message';
   static const String galleryDeleteConfirm = 'gallery.delete_confirm';
+  static const String galleryAll = 'gallery.all';
+  static const String galleryFavorites = 'gallery.favorites';
+  static const String galleryFavoritesEmptyTitle = 'gallery.favorites_empty_title';
+  static const String galleryFavoritesEmptySubtitle =
+      'gallery.favorites_empty_subtitle';
 
   static const String redesignBack = 'redesign.back';
   static const String redesignNext = 'redesign.next';
@@ -91,6 +96,8 @@ abstract final class LocaleKeys {
   static const String redesignHoldToCompareHint = 'redesign.hold_to_compare_hint';
   static const String redesignGeneratingTitle = 'redesign.generating_title';
   static const String redesignGeneratingSubtitle = 'redesign.generating_subtitle';
+  static const String redesignGeneratingProgress = 'redesign.generating_progress';
+  static const String redesignRegenerate = 'redesign.regenerate';
   static const String redesignResultTitle = 'redesign.result_title';
   static const String redesignError = 'redesign.error';
   static const String redesignTryAgain = 'redesign.try_again';
@@ -158,6 +165,11 @@ abstract final class LocaleKeys {
   static const String forceUpdateTitle = 'force_update.title';
   static const String forceUpdateMessage = 'force_update.message';
   static const String forceUpdateButton = 'force_update.button';
+
+  static const String notificationDesignReadyTitle =
+      'notification.design_ready_title';
+  static const String notificationDesignReadyBody =
+      'notification.design_ready_body';
 
   static const String commonCancel = 'common.cancel';
   static const String commonOk = 'common.ok';

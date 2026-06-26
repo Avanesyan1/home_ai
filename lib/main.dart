@@ -12,13 +12,12 @@ import 'package:home_ai/presentation/services/gemini_key_service.dart';
 import 'package:home_ai/core/service/premium/premium_service.dart';
 import 'package:home_ai/features/gallery/data/gallery_repository.dart';
 import 'package:home_ai/core/service/analytics/analytics_service.dart';
+import 'package:home_ai/core/service/notifications/local_notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
 
-  // Firebase init can hang on a poor network; cap it so we never block the
-  // first frame. App Store reviewers run on networks where this matters.
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -27,7 +26,6 @@ void main() async {
     debugPrint('Firebase init skipped: $error');
   }
 
-  // Local, fast initializers that the UI depends on immediately.
   try {
     await GeminiKeyService.instance.init();
   } catch (error) {
@@ -58,4 +56,5 @@ void main() async {
   // slow/blocked network leaves the app on a blank screen forever.
   unawaited(PremiumService.instance.init());
   unawaited(AnalyticsService.instance.init());
+  unawaited(LocalNotificationService.instance.init());
 }

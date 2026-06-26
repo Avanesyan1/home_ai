@@ -65,7 +65,9 @@
     "style_tile": "Плитка",
     "style_marble": "Мрамор",
     "style_concrete": "Бетон",
-    "style_carpet": "Ковролин"
+    "style_carpet": "Ковролин",
+    "generating_progress": "{percent}%",
+    "regenerate": "Попробовать другой стиль"
   },
   "onboarding": {
     "title": "Преобразите пространство с AI",
@@ -126,7 +128,11 @@
     "not_found": "Дизайн не найден",
     "delete_title": "Удалить дизайн?",
     "delete_message": "Дизайн будет удалён из галереи.",
-    "delete_confirm": "Удалить"
+    "delete_confirm": "Удалить",
+    "all": "Все",
+    "favorites": "Избранное",
+    "favorites_empty_title": "Пока нет избранного",
+    "favorites_empty_subtitle": "Нажмите на сердечко, чтобы сохранить дизайн сюда"
   },
   "settings": {
     "title": "Настройки",
@@ -164,5 +170,9 @@
     "ok": "OK",
     "error": "Ошибка",
     "link_open_failed": "Не удалось открыть ссылку."
+  },
+  "notification": {
+    "design_ready_title": "Дизайн готов!",
+    "design_ready_body": "Редизайн завершён. Откройте приложение, чтобы посмотреть."
   }
 }

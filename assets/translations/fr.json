@@ -65,7 +65,9 @@
     "style_tile": "Carrelage",
     "style_marble": "Marbre",
     "style_concrete": "Béton",
-    "style_carpet": "Moquette"
+    "style_carpet": "Moquette",
+    "generating_progress": "{percent}%",
+    "regenerate": "Essayer un autre style"
   },
   "onboarding": {
     "title": "Transformez votre espace avec l'IA",
@@ -126,7 +128,11 @@
     "not_found": "Design introuvable",
     "delete_title": "Supprimer le design ?",
     "delete_message": "Le design sera supprimé de votre galerie.",
-    "delete_confirm": "Supprimer"
+    "delete_confirm": "Supprimer",
+    "all": "Tous",
+    "favorites": "Favoris",
+    "favorites_empty_title": "Pas encore de favoris",
+    "favorites_empty_subtitle": "Appuyez sur le cœur pour enregistrer un design ici"
   },
   "settings": {
     "title": "Réglages",
@@ -164,5 +170,9 @@
     "ok": "OK",
     "error": "Erreur",
     "link_open_failed": "Impossible d'ouvrir le lien."
+  },
+  "notification": {
+    "design_ready_title": "Design prêt !",
+    "design_ready_body": "Votre redesign est terminé. Ouvrez l'app pour le voir."
   }
 }

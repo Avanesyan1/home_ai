@@ -24,10 +24,14 @@ class GalleryRepository {
     _instance = GalleryRepository(database);
   }
 
-  Stream<List<SavedDesign>> watchAll() {
-    return _database.watchAllDesigns().map(
+  Stream<List<SavedDesign>> watchAll({bool favoritesOnly = false}) {
+    return _database.watchAllDesigns(favoritesOnly: favoritesOnly).map(
           (rows) => rows.map(SavedDesign.fromRow).toList(growable: false),
         );
+  }
+
+  Future<void> toggleFavorite(int id, bool isFavorite) {
+    return _database.setFavorite(id, isFavorite);
   }
 
   Future<SavedDesign?> getById(int id) async {

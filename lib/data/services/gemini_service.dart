@@ -52,10 +52,17 @@ class GeminiService {
   }
 
   Future<Uint8List> _generateImageOnce(Map<String, dynamic> requestBody) async {
+    await _keys.ensureKeysLoaded();
+
     final config = _keys.config;
     if (!config.canGenerate) {
+      dev.log(
+        'GeminiService: cannot generate — ${_keys.describeState()}',
+      );
       throw GeminiApiException.noApiKey('Vertex');
     }
+
+    dev.log('GeminiService: starting image generation — ${_keys.describeState()}');
 
     final response = await _client.postVertex(
       model: AiConfig.imageModel,

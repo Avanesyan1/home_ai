@@ -21,8 +21,14 @@ class GeminiHttpClient {
   }) async {
     final apiKey = await nextVertexKey();
     if (apiKey == null || apiKey.isEmpty) {
+      dev.log('GeminiHttp: Vertex request blocked — no API key');
       throw GeminiApiException.noApiKey('Vertex');
     }
+
+    dev.log(
+      'GeminiHttp: Vertex POST model=$model '
+      'key=${_maskApiKey(apiKey)} endpoint=${vertex.projectId.isEmpty ? "express" : "project"}',
+    );
 
     final uri = vertex.projectId.isNotEmpty
         ? Uri.parse(
@@ -75,10 +81,26 @@ class GeminiHttpClient {
       );
     }
 
+    dev.log(
+      'GeminiHttp: request failed status=${response.statusCode} '
+      'key=${_maskApiKey(apiKey)} body=${response.body.length > 200 ? '${response.body.substring(0, 200)}...' : response.body}',
+    );
+
     throw GeminiApiException.fromHttp(
       statusCode: response.statusCode,
       body: response.body,
     );
+  }
+
+  static String _maskApiKey(String key) {
+    final trimmed = key.trim();
+    if (trimmed.isEmpty) {
+      return '<empty>';
+    }
+    if (trimmed.length <= 8) {
+      return '<len=${trimmed.length}>';
+    }
+    return '${trimmed.substring(0, 4)}...${trimmed.substring(trimmed.length - 4)}';
   }
 
   Map<String, dynamic> _toRequestJson(Map<String, dynamic> body) {

@@ -23,6 +23,8 @@ class GeneratedDesigns extends Table {
   TextColumn get wishes => text().withDefault(const Constant(''))();
 
   DateTimeColumn get createdAt => dateTime()();
+
+  BoolColumn get isFavorite => boolean().withDefault(const Constant(false))();
 }
 
 @DriftDatabase(tables: [GeneratedDesigns])
@@ -30,7 +32,19 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        onUpgrade: (migrator, from, to) async {
+          if (from < 2) {
+            await migrator.addColumn(
+              generatedDesigns,
+              generatedDesigns.isFavorite,
+            );
+          }
+        },
+      );
 
   static AppDatabase? _instance;
 
@@ -46,10 +60,20 @@ class AppDatabase extends _$AppDatabase {
     _instance = AppDatabase();
   }
 
-  Stream<List<GeneratedDesign>> watchAllDesigns() {
-    return (select(generatedDesigns)
-          ..orderBy([(table) => OrderingTerm.desc(table.createdAt)]))
-        .watch();
+  Stream<List<GeneratedDesign>> watchAllDesigns({bool favoritesOnly = false}) {
+    final query = select(generatedDesigns)
+      ..orderBy([(table) => OrderingTerm.desc(table.createdAt)]);
+
+    if (favoritesOnly) {
+      query.where((table) => table.isFavorite.equals(true));
+    }
+
+    return query.watch();
+  }
+
+  Future<void> setFavorite(int id, bool isFavorite) {
+    return (update(generatedDesigns)..where((table) => table.id.equals(id)))
+        .write(GeneratedDesignsCompanion(isFavorite: Value(isFavorite)));
   }
 
   Future<int> insertDesign(GeneratedDesignsCompanion entry) {

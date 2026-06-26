@@ -98,6 +98,21 @@ class $GeneratedDesignsTable extends GeneratedDesigns
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _isFavoriteMeta = const VerificationMeta(
+    'isFavorite',
+  );
+  @override
+  late final GeneratedColumn<bool> isFavorite = GeneratedColumn<bool>(
+    'is_favorite',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_favorite" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -108,6 +123,7 @@ class $GeneratedDesignsTable extends GeneratedDesigns
     paletteId,
     wishes,
     createdAt,
+    isFavorite,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -178,6 +194,12 @@ class $GeneratedDesignsTable extends GeneratedDesigns
     } else if (isInserting) {
       context.missing(_createdAtMeta);
     }
+    if (data.containsKey('is_favorite')) {
+      context.handle(
+        _isFavoriteMeta,
+        isFavorite.isAcceptableOrUnknown(data['is_favorite']!, _isFavoriteMeta),
+      );
+    }
     return context;
   }
 
@@ -219,6 +241,10 @@ class $GeneratedDesignsTable extends GeneratedDesigns
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
       )!,
+      isFavorite: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_favorite'],
+      )!,
     );
   }
 
@@ -237,6 +263,7 @@ class GeneratedDesign extends DataClass implements Insertable<GeneratedDesign> {
   final String paletteId;
   final String wishes;
   final DateTime createdAt;
+  final bool isFavorite;
   const GeneratedDesign({
     required this.id,
     required this.category,
@@ -246,6 +273,7 @@ class GeneratedDesign extends DataClass implements Insertable<GeneratedDesign> {
     required this.paletteId,
     required this.wishes,
     required this.createdAt,
+    required this.isFavorite,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -258,6 +286,7 @@ class GeneratedDesign extends DataClass implements Insertable<GeneratedDesign> {
     map['palette_id'] = Variable<String>(paletteId);
     map['wishes'] = Variable<String>(wishes);
     map['created_at'] = Variable<DateTime>(createdAt);
+    map['is_favorite'] = Variable<bool>(isFavorite);
     return map;
   }
 
@@ -271,6 +300,7 @@ class GeneratedDesign extends DataClass implements Insertable<GeneratedDesign> {
       paletteId: Value(paletteId),
       wishes: Value(wishes),
       createdAt: Value(createdAt),
+      isFavorite: Value(isFavorite),
     );
   }
 
@@ -288,6 +318,7 @@ class GeneratedDesign extends DataClass implements Insertable<GeneratedDesign> {
       paletteId: serializer.fromJson<String>(json['paletteId']),
       wishes: serializer.fromJson<String>(json['wishes']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      isFavorite: serializer.fromJson<bool>(json['isFavorite']),
     );
   }
   @override
@@ -302,6 +333,7 @@ class GeneratedDesign extends DataClass implements Insertable<GeneratedDesign> {
       'paletteId': serializer.toJson<String>(paletteId),
       'wishes': serializer.toJson<String>(wishes),
       'createdAt': serializer.toJson<DateTime>(createdAt),
+      'isFavorite': serializer.toJson<bool>(isFavorite),
     };
   }
 
@@ -314,6 +346,7 @@ class GeneratedDesign extends DataClass implements Insertable<GeneratedDesign> {
     String? paletteId,
     String? wishes,
     DateTime? createdAt,
+    bool? isFavorite,
   }) => GeneratedDesign(
     id: id ?? this.id,
     category: category ?? this.category,
@@ -323,6 +356,7 @@ class GeneratedDesign extends DataClass implements Insertable<GeneratedDesign> {
     paletteId: paletteId ?? this.paletteId,
     wishes: wishes ?? this.wishes,
     createdAt: createdAt ?? this.createdAt,
+    isFavorite: isFavorite ?? this.isFavorite,
   );
   GeneratedDesign copyWithCompanion(GeneratedDesignsCompanion data) {
     return GeneratedDesign(
@@ -336,6 +370,9 @@ class GeneratedDesign extends DataClass implements Insertable<GeneratedDesign> {
       paletteId: data.paletteId.present ? data.paletteId.value : this.paletteId,
       wishes: data.wishes.present ? data.wishes.value : this.wishes,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      isFavorite: data.isFavorite.present
+          ? data.isFavorite.value
+          : this.isFavorite,
     );
   }
 
@@ -349,7 +386,8 @@ class GeneratedDesign extends DataClass implements Insertable<GeneratedDesign> {
           ..write('styleId: $styleId, ')
           ..write('paletteId: $paletteId, ')
           ..write('wishes: $wishes, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('isFavorite: $isFavorite')
           ..write(')'))
         .toString();
   }
@@ -364,6 +402,7 @@ class GeneratedDesign extends DataClass implements Insertable<GeneratedDesign> {
     paletteId,
     wishes,
     createdAt,
+    isFavorite,
   );
   @override
   bool operator ==(Object other) =>
@@ -376,7 +415,8 @@ class GeneratedDesign extends DataClass implements Insertable<GeneratedDesign> {
           other.styleId == this.styleId &&
           other.paletteId == this.paletteId &&
           other.wishes == this.wishes &&
-          other.createdAt == this.createdAt);
+          other.createdAt == this.createdAt &&
+          other.isFavorite == this.isFavorite);
 }
 
 class GeneratedDesignsCompanion extends UpdateCompanion<GeneratedDesign> {
@@ -388,6 +428,7 @@ class GeneratedDesignsCompanion extends UpdateCompanion<GeneratedDesign> {
   final Value<String> paletteId;
   final Value<String> wishes;
   final Value<DateTime> createdAt;
+  final Value<bool> isFavorite;
   const GeneratedDesignsCompanion({
     this.id = const Value.absent(),
     this.category = const Value.absent(),
@@ -397,6 +438,7 @@ class GeneratedDesignsCompanion extends UpdateCompanion<GeneratedDesign> {
     this.paletteId = const Value.absent(),
     this.wishes = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.isFavorite = const Value.absent(),
   });
   GeneratedDesignsCompanion.insert({
     this.id = const Value.absent(),
@@ -407,6 +449,7 @@ class GeneratedDesignsCompanion extends UpdateCompanion<GeneratedDesign> {
     required String paletteId,
     this.wishes = const Value.absent(),
     required DateTime createdAt,
+    this.isFavorite = const Value.absent(),
   }) : category = Value(category),
        beforePath = Value(beforePath),
        afterPath = Value(afterPath),
@@ -422,6 +465,7 @@ class GeneratedDesignsCompanion extends UpdateCompanion<GeneratedDesign> {
     Expression<String>? paletteId,
     Expression<String>? wishes,
     Expression<DateTime>? createdAt,
+    Expression<bool>? isFavorite,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -432,6 +476,7 @@ class GeneratedDesignsCompanion extends UpdateCompanion<GeneratedDesign> {
       if (paletteId != null) 'palette_id': paletteId,
       if (wishes != null) 'wishes': wishes,
       if (createdAt != null) 'created_at': createdAt,
+      if (isFavorite != null) 'is_favorite': isFavorite,
     });
   }
 
@@ -444,6 +489,7 @@ class GeneratedDesignsCompanion extends UpdateCompanion<GeneratedDesign> {
     Value<String>? paletteId,
     Value<String>? wishes,
     Value<DateTime>? createdAt,
+    Value<bool>? isFavorite,
   }) {
     return GeneratedDesignsCompanion(
       id: id ?? this.id,
@@ -454,6 +500,7 @@ class GeneratedDesignsCompanion extends UpdateCompanion<GeneratedDesign> {
       paletteId: paletteId ?? this.paletteId,
       wishes: wishes ?? this.wishes,
       createdAt: createdAt ?? this.createdAt,
+      isFavorite: isFavorite ?? this.isFavorite,
     );
   }
 
@@ -484,6 +531,9 @@ class GeneratedDesignsCompanion extends UpdateCompanion<GeneratedDesign> {
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
+    if (isFavorite.present) {
+      map['is_favorite'] = Variable<bool>(isFavorite.value);
+    }
     return map;
   }
 
@@ -497,7 +547,8 @@ class GeneratedDesignsCompanion extends UpdateCompanion<GeneratedDesign> {
           ..write('styleId: $styleId, ')
           ..write('paletteId: $paletteId, ')
           ..write('wishes: $wishes, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('isFavorite: $isFavorite')
           ..write(')'))
         .toString();
   }
@@ -526,6 +577,7 @@ typedef $$GeneratedDesignsTableCreateCompanionBuilder =
       required String paletteId,
       Value<String> wishes,
       required DateTime createdAt,
+      Value<bool> isFavorite,
     });
 typedef $$GeneratedDesignsTableUpdateCompanionBuilder =
     GeneratedDesignsCompanion Function({
@@ -537,6 +589,7 @@ typedef $$GeneratedDesignsTableUpdateCompanionBuilder =
       Value<String> paletteId,
       Value<String> wishes,
       Value<DateTime> createdAt,
+      Value<bool> isFavorite,
     });
 
 class $$GeneratedDesignsTableFilterComposer
@@ -585,6 +638,11 @@ class $$GeneratedDesignsTableFilterComposer
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isFavorite => $composableBuilder(
+    column: $table.isFavorite,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -637,6 +695,11 @@ class $$GeneratedDesignsTableOrderingComposer
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<bool> get isFavorite => $composableBuilder(
+    column: $table.isFavorite,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$GeneratedDesignsTableAnnotationComposer
@@ -673,6 +736,11 @@ class $$GeneratedDesignsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get isFavorite => $composableBuilder(
+    column: $table.isFavorite,
+    builder: (column) => column,
+  );
 }
 
 class $$GeneratedDesignsTableTableManager
@@ -720,6 +788,7 @@ class $$GeneratedDesignsTableTableManager
                 Value<String> paletteId = const Value.absent(),
                 Value<String> wishes = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<bool> isFavorite = const Value.absent(),
               }) => GeneratedDesignsCompanion(
                 id: id,
                 category: category,
@@ -729,6 +798,7 @@ class $$GeneratedDesignsTableTableManager
                 paletteId: paletteId,
                 wishes: wishes,
                 createdAt: createdAt,
+                isFavorite: isFavorite,
               ),
           createCompanionCallback:
               ({
@@ -740,6 +810,7 @@ class $$GeneratedDesignsTableTableManager
                 required String paletteId,
                 Value<String> wishes = const Value.absent(),
                 required DateTime createdAt,
+                Value<bool> isFavorite = const Value.absent(),
               }) => GeneratedDesignsCompanion.insert(
                 id: id,
                 category: category,
@@ -749,6 +820,7 @@ class $$GeneratedDesignsTableTableManager
                 paletteId: paletteId,
                 wishes: wishes,
                 createdAt: createdAt,
+                isFavorite: isFavorite,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

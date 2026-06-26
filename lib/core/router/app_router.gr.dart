@@ -175,10 +175,17 @@ class RedesignFlowRoute extends PageRouteInfo<RedesignFlowRouteArgs> {
   RedesignFlowRoute({
     Key? key,
     required RedesignCategory category,
+    String? initialImagePath,
+    String? initialWishes,
     List<PageRouteInfo>? children,
   }) : super(
          RedesignFlowRoute.name,
-         args: RedesignFlowRouteArgs(key: key, category: category),
+         args: RedesignFlowRouteArgs(
+           key: key,
+           category: category,
+           initialImagePath: initialImagePath,
+           initialWishes: initialWishes,
+         ),
          initialChildren: children,
        );
 
@@ -188,32 +195,53 @@ class RedesignFlowRoute extends PageRouteInfo<RedesignFlowRouteArgs> {
     name,
     builder: (data) {
       final args = data.argsAs<RedesignFlowRouteArgs>();
-      return RedesignFlowPage(key: args.key, category: args.category);
+      return RedesignFlowPage(
+        key: args.key,
+        category: args.category,
+        initialImagePath: args.initialImagePath,
+        initialWishes: args.initialWishes,
+      );
     },
   );
 }
 
 class RedesignFlowRouteArgs {
-  const RedesignFlowRouteArgs({this.key, required this.category});
+  const RedesignFlowRouteArgs({
+    this.key,
+    required this.category,
+    this.initialImagePath,
+    this.initialWishes,
+  });
 
   final Key? key;
 
   final RedesignCategory category;
 
+  final String? initialImagePath;
+
+  final String? initialWishes;
+
   @override
   String toString() {
-    return 'RedesignFlowRouteArgs{key: $key, category: $category}';
+    return 'RedesignFlowRouteArgs{key: $key, category: $category, initialImagePath: $initialImagePath, initialWishes: $initialWishes}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! RedesignFlowRouteArgs) return false;
-    return key == other.key && category == other.category;
+    return key == other.key &&
+        category == other.category &&
+        initialImagePath == other.initialImagePath &&
+        initialWishes == other.initialWishes;
   }
 
   @override
-  int get hashCode => key.hashCode ^ category.hashCode;
+  int get hashCode =>
+      key.hashCode ^
+      category.hashCode ^
+      initialImagePath.hashCode ^
+      initialWishes.hashCode;
 }
 
 /// generated route for

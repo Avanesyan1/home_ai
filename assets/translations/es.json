@@ -65,7 +65,9 @@
     "style_tile": "Baldosa",
     "style_marble": "Mármol",
     "style_concrete": "Hormigón",
-    "style_carpet": "Moqueta"
+    "style_carpet": "Moqueta",
+    "generating_progress": "{percent}%",
+    "regenerate": "Probar otro estilo"
   },
   "onboarding": {
     "title": "Transforma tu espacio con IA",
@@ -126,7 +128,11 @@
     "not_found": "Diseño no encontrado",
     "delete_title": "¿Eliminar diseño?",
     "delete_message": "Se eliminará el diseño de tu galería.",
-    "delete_confirm": "Eliminar"
+    "delete_confirm": "Eliminar",
+    "all": "Todos",
+    "favorites": "Favoritos",
+    "favorites_empty_title": "Sin favoritos aún",
+    "favorites_empty_subtitle": "Toca el corazón en un diseño para guardarlo aquí"
   },
   "settings": {
     "title": "Ajustes",
@@ -164,5 +170,9 @@
     "ok": "OK",
     "error": "Error",
     "link_open_failed": "No se pudo abrir el enlace."
+  },
+  "notification": {
+    "design_ready_title": "¡Diseño listo!",
+    "design_ready_body": "Tu rediseño está completo. Abre la app para verlo."
   }
 }

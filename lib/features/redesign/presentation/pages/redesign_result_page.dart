@@ -8,7 +8,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:home_ai/core/helpers/gallery_helper.dart';
 import 'package:home_ai/core/helpers/share_helper.dart';
 import 'package:home_ai/core/l10n/locale_keys.dart';
+import 'package:home_ai/core/router/app_router.dart';
 import 'package:home_ai/core/service/analytics/analytics_service.dart';
+import 'package:home_ai/core/service/review/app_review_service.dart';
+import 'package:home_ai/core/utils/app_haptics.dart';
 import 'package:home_ai/core/theme/app_animations.dart';
 import 'package:home_ai/core/theme/app_colors.dart';
 import 'package:home_ai/core/theme/app_decorations.dart';
@@ -43,6 +46,23 @@ class _RedesignResultPageState extends State<RedesignResultPage> {
   void initState() {
     super.initState();
     unawaited(AnalyticsService.instance.logScreen('redesign_result'));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future<void>.delayed(const Duration(seconds: 2), () {
+        if (mounted) {
+          unawaited(AppReviewService.instance.requestReviewIfPending());
+        }
+      });
+    });
+  }
+
+  void _regenerate() {
+    AppHaptics.light();
+    context.router.push(
+      RedesignFlowRoute(
+        category: widget.category,
+        initialImagePath: widget.beforePath,
+      ),
+    );
   }
 
   Future<void> _shareImage(BuildContext anchorContext) async {
@@ -178,6 +198,16 @@ class _RedesignResultPageState extends State<RedesignResultPage> {
                   ).animateStagger(1, stepMs: 80),
                 ],
               ),
+              const SizedBox(height: AppSpacing.md),
+              CupertinoButton(
+                color: AppColors.surfaceMuted,
+                borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                onPressed: _regenerate,
+                child: Text(
+                  LocaleKeys.redesignRegenerate.tr(),
+                  style: AppTextStyles.bodyMedium,
+                ),
+              ).animateFadeUp(delay: const Duration(milliseconds: 180)),
               const SizedBox(height: AppSpacing.md),
               CupertinoButton(
                 color: AppColors.primary,

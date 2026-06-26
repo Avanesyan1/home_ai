@@ -11,6 +11,7 @@ class SavedDesign {
     required this.paletteId,
     required this.wishes,
     required this.createdAt,
+    this.isFavorite = false,
   });
 
   final int id;
@@ -21,6 +22,7 @@ class SavedDesign {
   final String paletteId;
   final String wishes;
   final DateTime createdAt;
+  final bool isFavorite;
 
   factory SavedDesign.fromRow(GeneratedDesign row) {
     return SavedDesign(
@@ -32,6 +34,7 @@ class SavedDesign {
       paletteId: row.paletteId,
       wishes: row.wishes,
       createdAt: row.createdAt,
+      isFavorite: row.isFavorite,
     );
   }
 }

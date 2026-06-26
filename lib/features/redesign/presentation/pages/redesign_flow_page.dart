@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:home_ai/core/router/app_router.dart';
 import 'package:home_ai/core/service/analytics/analytics_service.dart';
 import 'package:home_ai/core/service/generation/generation_limit_service.dart';
+import 'package:home_ai/core/utils/app_haptics.dart';
 import 'package:home_ai/features/paywall/presentation/paywall_entry.dart';
 import 'package:home_ai/features/redesign/domain/entities/redesign_category.dart';
 import 'package:home_ai/features/redesign/domain/entities/redesign_draft.dart';
@@ -21,9 +22,13 @@ class RedesignFlowPage extends StatefulWidget {
   const RedesignFlowPage({
     super.key,
     required this.category,
+    this.initialImagePath,
+    this.initialWishes,
   });
 
   final RedesignCategory category;
+  final String? initialImagePath;
+  final String? initialWishes;
 
   @override
   State<RedesignFlowPage> createState() => _RedesignFlowPageState();
@@ -45,7 +50,23 @@ class _RedesignFlowPageState extends State<RedesignFlowPage> {
     unawaited(
       AnalyticsService.instance.logRedesignFlowStarted(widget.category.name),
     );
-    _draft = RedesignDraft(category: widget.category);
+    _draft = RedesignDraft(
+      category: widget.category,
+      imagePath: widget.initialImagePath,
+    );
+
+    if (widget.initialWishes != null) {
+      _wishesController.text = widget.initialWishes!;
+    }
+
+    if (widget.initialImagePath != null) {
+      _currentStep = 1;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _pageController.jumpToPage(1);
+        }
+      });
+    }
   }
 
   @override
@@ -78,6 +99,8 @@ class _RedesignFlowPageState extends State<RedesignFlowPage> {
     if (!_canProceed) {
       return;
     }
+
+    AppHaptics.light();
 
     if (_currentStep == _totalSteps - 1) {
       unawaited(_startGeneration());
@@ -165,14 +188,18 @@ class _RedesignFlowPageState extends State<RedesignFlowPage> {
             category: widget.category,
             styles: styles,
             selectedStyle: _draft.style,
-            onStyleSelected: (style) =>
-                _updateDraft(_draft.copyWith(style: style)),
+            onStyleSelected: (style) {
+              AppHaptics.selection();
+              _updateDraft(_draft.copyWith(style: style));
+            },
           ),
           RedesignPaletteStep(
             palettes: RedesignOptions.palettes,
             selectedPalette: _draft.palette,
-            onPaletteSelected: (palette) =>
-                _updateDraft(_draft.copyWith(palette: palette)),
+            onPaletteSelected: (palette) {
+              AppHaptics.selection();
+              _updateDraft(_draft.copyWith(palette: palette));
+            },
           ),
           RedesignWishesStep(controller: _wishesController),
         ],
