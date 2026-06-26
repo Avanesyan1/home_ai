@@ -6,5 +6,14 @@ abstract final class AppLocales {
   static const List<Locale> supported = [
     Locale('en'),
     Locale('ru'),
+    Locale('es'),
+    Locale('de'),
+    Locale('fr'),
+    Locale('pt'),
+    Locale('it'),
+    Locale('tr'),
+    Locale('ja'),
+    Locale('ko'),
+    Locale('zh'),
   ];
 }

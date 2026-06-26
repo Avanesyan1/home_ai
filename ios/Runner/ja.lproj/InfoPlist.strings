@@ -1,0 +1,4 @@
+"CFBundleDisplayName" = "Home AI";
+"NSCameraUsageDescription" = "リデザイン用の写真を撮るためにカメラへのアクセスが必要です。";
+"NSPhotoLibraryUsageDescription" = "リデザイン用の画像をアップロードするために写真へのアクセスが必要です。";
+"NSPhotoLibraryAddUsageDescription" = "生成されたデザインを保存するためにフォトライブラリへのアクセスが必要です。";

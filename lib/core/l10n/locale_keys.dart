@@ -137,6 +137,15 @@ abstract final class LocaleKeys {
   static const String settingsLanguage = 'settings.language';
   static const String settingsLanguageEn = 'settings.language_en';
   static const String settingsLanguageRu = 'settings.language_ru';
+  static const String settingsLanguageEs = 'settings.language_es';
+  static const String settingsLanguageDe = 'settings.language_de';
+  static const String settingsLanguageFr = 'settings.language_fr';
+  static const String settingsLanguagePt = 'settings.language_pt';
+  static const String settingsLanguageIt = 'settings.language_it';
+  static const String settingsLanguageTr = 'settings.language_tr';
+  static const String settingsLanguageJa = 'settings.language_ja';
+  static const String settingsLanguageKo = 'settings.language_ko';
+  static const String settingsLanguageZh = 'settings.language_zh';
   static const String settingsRateApp = 'settings.rate_app';
   static const String settingsSupport = 'settings.support';
   static const String settingsVersion = 'settings.version';

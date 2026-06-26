@@ -1,0 +1,4 @@
+"CFBundleDisplayName" = "Home AI";
+"NSCameraUsageDescription" = "需要访问相机以拍摄用于重新设计的照片。";
+"NSPhotoLibraryUsageDescription" = "需要访问照片以上传用于重新设计的图片。";
+"NSPhotoLibraryAddUsageDescription" = "需要访问相册以保存生成的设计。";

@@ -1,0 +1,4 @@
+"CFBundleDisplayName" = "Home AI";
+"NSCameraUsageDescription" = "L'accès à la caméra est nécessaire pour prendre des photos pour le redesign.";
+"NSPhotoLibraryUsageDescription" = "L'accès aux photos est nécessaire pour importer des images pour le redesign.";
+"NSPhotoLibraryAddUsageDescription" = "L'accès à la galerie est nécessaire pour enregistrer les designs générés.";

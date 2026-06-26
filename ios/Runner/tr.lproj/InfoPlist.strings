@@ -1,0 +1,4 @@
+"CFBundleDisplayName" = "Home AI";
+"NSCameraUsageDescription" = "Yeniden tasarım için fotoğraf çekmek amacıyla kamera erişimi gereklidir.";
+"NSPhotoLibraryUsageDescription" = "Yeniden tasarım için görsel yüklemek amacıyla fotoğraf erişimi gereklidir.";
+"NSPhotoLibraryAddUsageDescription" = "Oluşturulan tasarımları kaydetmek için galeri erişimi gereklidir.";
