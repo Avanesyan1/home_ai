@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:home_ai/core/l10n/app_locales.dart';
 import 'package:home_ai/core/l10n/locale_keys.dart';
 import 'package:home_ai/core/l10n/locale_labels.dart';
+import 'package:home_ai/core/service/analytics/analytics_service.dart';
 import 'package:home_ai/core/theme/app_colors.dart';
 import 'package:home_ai/core/theme/app_spacing.dart';
 import 'package:home_ai/core/theme/app_text_styles.dart';
@@ -47,7 +50,13 @@ abstract final class LanguagePickerSheet {
                       currentLocale.languageCode,
                   showDivider: i < AppLocales.supported.length - 1,
                   onTap: () {
-                    context.setLocale(AppLocales.supported[i]);
+                    final locale = AppLocales.supported[i];
+                    unawaited(
+                      AnalyticsService.instance.logSettingsLanguageChanged(
+                        locale.languageCode,
+                      ),
+                    );
+                    context.setLocale(locale);
                     Navigator.of(sheetContext).pop();
                   },
                 ),

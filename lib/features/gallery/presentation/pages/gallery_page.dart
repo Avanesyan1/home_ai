@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:home_ai/core/l10n/locale_keys.dart';
 import 'package:home_ai/core/router/app_router.dart';
+import 'package:home_ai/core/service/analytics/analytics_service.dart';
 import 'package:home_ai/core/theme/app_animations.dart';
 import 'package:home_ai/core/theme/app_colors.dart';
 import 'package:home_ai/core/theme/app_spacing.dart';
@@ -70,9 +73,16 @@ class GalleryPage extends StatelessWidget {
                   final design = designs[index];
                   return GalleryGridItem(
                     design: design,
-                    onTap: () => context.router.push(
-                      GalleryDetailRoute(designId: design.id),
-                    ),
+                    onTap: () {
+                      unawaited(
+                        AnalyticsService.instance.logGalleryItemOpened(
+                          design.id,
+                        ),
+                      );
+                      context.router.push(
+                        GalleryDetailRoute(designId: design.id),
+                      );
+                    },
                   ).animateStagger(index, stepMs: 60);
                 },
               );

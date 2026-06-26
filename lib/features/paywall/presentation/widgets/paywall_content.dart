@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:home_ai/core/config/app_links.dart';
 import 'package:home_ai/core/l10n/locale_keys.dart';
+import 'package:home_ai/core/service/analytics/analytics_service.dart';
 import 'package:home_ai/core/service/premium/premium_service.dart';
 import 'package:home_ai/core/theme/app_animations.dart';
 import 'package:home_ai/core/theme/app_colors.dart';
@@ -24,6 +25,7 @@ class PaywallContent extends StatefulWidget {
   const PaywallContent({
     super.key,
     required this.onDismiss,
+    required this.source,
     this.onPurchased,
     this.initialPlan = PaywallPlan.monthly,
     this.weeklyOnly = false,
@@ -32,6 +34,7 @@ class PaywallContent extends StatefulWidget {
   });
 
   final VoidCallback onDismiss;
+  final String source;
   final VoidCallback? onPurchased;
   final PaywallPlan initialPlan;
   final bool weeklyOnly;
@@ -54,6 +57,10 @@ class _PaywallContentState extends State<PaywallContent> {
   void initState() {
     super.initState();
     _selected = widget.initialPlan;
+    unawaited(AnalyticsService.instance.logScreen('paywall'));
+    unawaited(
+      AnalyticsService.instance.logPaywallViewed(source: widget.source),
+    );
     _premium.loadProducts();
     _premium.products.addListener(_onProductsChanged);
     _premium.havePremium.addListener(_onPremiumChanged);
@@ -173,6 +180,14 @@ class _PaywallContentState extends State<PaywallContent> {
     final resolvedProduct = _productForPlan(_selected)!;
 
     setState(() => _isPurchasing = true);
+    final planName = _selected.name;
+    unawaited(
+      AnalyticsService.instance.logPurchaseStarted(
+        source: widget.source,
+        plan: planName,
+        productId: resolvedProduct.identifier,
+      ),
+    );
     final success = await _premium.buyProduct(resolvedProduct);
     if (!mounted) {
       return;
@@ -180,13 +195,25 @@ class _PaywallContentState extends State<PaywallContent> {
     setState(() => _isPurchasing = false);
 
     if (success) {
+      unawaited(
+        AnalyticsService.instance.logPurchaseSuccess(
+          source: widget.source,
+          productId: resolvedProduct.identifier,
+        ),
+      );
       _handlePurchased();
     }
   }
 
   Future<void> _restore() async {
+    unawaited(
+      AnalyticsService.instance.logPaywallRestoreTapped(source: widget.source),
+    );
     await _premium.restorePurchase(context);
     if (mounted && _premium.havePremium.value) {
+      unawaited(
+        AnalyticsService.instance.logRestoreSuccess(source: widget.source),
+      );
       _handlePurchased();
     }
   }
@@ -211,7 +238,14 @@ class _PaywallContentState extends State<PaywallContent> {
                   left: 16.w,
                   child: _CircleIconButton(
                     icon: CupertinoIcons.xmark,
-                    onPressed: widget.onDismiss,
+                    onPressed: () {
+                      unawaited(
+                        AnalyticsService.instance.logPaywallDismissed(
+                          source: widget.source,
+                        ),
+                      );
+                      widget.onDismiss();
+                    },
                   ).animateFadeScale(),
                 ),
             ],
@@ -284,9 +318,14 @@ class _PaywallContentState extends State<PaywallContent> {
                               ),
                               selected: _selected == PaywallPlan.monthly,
                               highlightBadge: monthlyBadge.isNotEmpty,
-                              onTap: () => setState(
-                                () => _selected = PaywallPlan.monthly,
-                              ),
+                              onTap: () {
+                                setState(() => _selected = PaywallPlan.monthly);
+                                unawaited(
+                                  AnalyticsService.instance.logPaywallPlanSelected(
+                                    PaywallPlan.monthly.name,
+                                  ),
+                                );
+                              },
                             ).animateFadeUp(
                               delay: const Duration(milliseconds: 360),
                             ),
@@ -302,9 +341,14 @@ class _PaywallContentState extends State<PaywallContent> {
                               LocaleKeys.paywallWeeklyPrice.tr(),
                             ),
                             selected: _selected == PaywallPlan.weekly,
-                            onTap: () => setState(
-                              () => _selected = PaywallPlan.weekly,
-                            ),
+                            onTap: () {
+                              setState(() => _selected = PaywallPlan.weekly);
+                              unawaited(
+                                AnalyticsService.instance.logPaywallPlanSelected(
+                                  PaywallPlan.weekly.name,
+                                ),
+                              );
+                            },
                           ).animateFadeUp(
                             delay: Duration(
                               milliseconds: widget.weeklyOnly ? 360 : 440,
@@ -352,11 +396,19 @@ class _PaywallContentState extends State<PaywallContent> {
       children: [
         _FooterLink(
           label: LocaleKeys.paywallTerms.tr(),
-          onPressed: () => SettingsActions.openLink(context, AppLinks.terms),
+          onPressed: () => SettingsActions.openLink(
+            context,
+            AppLinks.terms,
+            link: 'terms',
+          ),
         ),
         _FooterLink(
           label: LocaleKeys.paywallPrivacy.tr(),
-          onPressed: () => SettingsActions.openLink(context, AppLinks.privacy),
+          onPressed: () => SettingsActions.openLink(
+            context,
+            AppLinks.privacy,
+            link: 'privacy',
+          ),
         ),
         _FooterLink(
           label: LocaleKeys.paywallRestore.tr(),

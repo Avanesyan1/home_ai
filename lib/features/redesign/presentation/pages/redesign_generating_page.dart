@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
@@ -6,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:home_ai/core/l10n/locale_keys.dart';
 import 'package:home_ai/core/router/app_router.dart';
 import 'package:home_ai/core/service/ai/ai_service.dart';
+import 'package:home_ai/core/service/analytics/analytics_service.dart';
 import 'package:home_ai/core/service/generation/generation_limit_service.dart';
 import 'package:home_ai/core/theme/app_animations.dart';
 import 'package:home_ai/core/theme/app_colors.dart';
@@ -46,6 +49,13 @@ class _RedesignGeneratingPageState extends State<RedesignGeneratingPage> {
   @override
   void initState() {
     super.initState();
+    unawaited(AnalyticsService.instance.logScreen('redesign_generating'));
+    unawaited(
+      AnalyticsService.instance.logGenerationStarted(
+        category: widget.category.name,
+        styleId: widget.styleId,
+      ),
+    );
     _generate();
   }
 
@@ -110,6 +120,13 @@ class _RedesignGeneratingPageState extends State<RedesignGeneratingPage> {
 
       await GenerationLimitService.instance.consumeFreeGeneration();
 
+      unawaited(
+        AnalyticsService.instance.logDesignSaved(widget.category.name),
+      );
+      unawaited(
+        AnalyticsService.instance.logGenerationSuccess(widget.category.name),
+      );
+
       if (!mounted) {
         return;
       }
@@ -125,6 +142,13 @@ class _RedesignGeneratingPageState extends State<RedesignGeneratingPage> {
       if (!mounted) {
         return;
       }
+
+      unawaited(
+        AnalyticsService.instance.logGenerationFailed(
+          category: widget.category.name,
+          reason: error.runtimeType.toString(),
+        ),
+      );
 
       setState(() => _errorMessage = error.toString());
     }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:home_ai/core/config/app_links.dart';
 import 'package:home_ai/core/l10n/locale_keys.dart';
 import 'package:home_ai/core/logger/app_logger.dart';
+import 'package:home_ai/core/service/analytics/analytics_service.dart';
 import 'package:home_ai/core/theme/app_colors.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
@@ -128,6 +131,12 @@ class PremiumService {
             break;
           }
         }
+      }
+
+      if (havePremium.value != hasActivePremium) {
+        unawaited(
+          AnalyticsService.instance.logPremiumStatusChanged(hasActivePremium),
+        );
       }
 
       havePremium.value = hasActivePremium;

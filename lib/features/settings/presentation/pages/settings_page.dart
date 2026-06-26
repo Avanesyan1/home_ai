@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:home_ai/core/config/app_links.dart';
 import 'package:home_ai/core/l10n/locale_keys.dart';
+import 'package:home_ai/core/service/analytics/analytics_service.dart';
 import 'package:home_ai/core/l10n/locale_labels.dart';
 import 'package:home_ai/core/theme/app_animations.dart';
 import 'package:home_ai/core/theme/app_colors.dart';
@@ -17,8 +20,19 @@ import 'package:home_ai/features/settings/presentation/widgets/settings_tile.dar
 import 'package:home_ai/features/settings/presentation/widgets/settings_version_tile.dart';
 
 @RoutePage()
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
+
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  @override
+  void initState() {
+    super.initState();
+    unawaited(AnalyticsService.instance.logScreen('settings'));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +87,7 @@ class SettingsPage extends StatelessWidget {
                                 onTap: () => SettingsActions.openLink(
                                   context,
                                   AppLinks.appStoreReview,
+                                  link: 'rate_app',
                                 ),
                               ),
                               SettingsTile(
@@ -83,6 +98,7 @@ class SettingsPage extends StatelessWidget {
                                 onTap: () => SettingsActions.openLink(
                                   context,
                                   AppLinks.support,
+                                  link: 'support',
                                 ),
                               ),
                               SettingsVersionTile(),
@@ -100,6 +116,7 @@ class SettingsPage extends StatelessWidget {
                                 onTap: () => SettingsActions.openLink(
                                   context,
                                   AppLinks.privacy,
+                                  link: 'privacy',
                                 ),
                               ),
                               SettingsTile(
@@ -111,6 +128,7 @@ class SettingsPage extends StatelessWidget {
                                 onTap: () => SettingsActions.openLink(
                                   context,
                                   AppLinks.terms,
+                                  link: 'terms',
                                 ),
                                 showDivider: false,
                               ),

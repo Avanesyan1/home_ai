@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
@@ -6,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:home_ai/core/helpers/gallery_helper.dart';
 import 'package:home_ai/core/helpers/share_helper.dart';
 import 'package:home_ai/core/l10n/locale_keys.dart';
+import 'package:home_ai/core/service/analytics/analytics_service.dart';
 import 'package:home_ai/core/theme/app_animations.dart';
 import 'package:home_ai/core/theme/app_colors.dart';
 import 'package:home_ai/core/theme/app_decorations.dart';
@@ -36,6 +39,12 @@ class _RedesignResultPageState extends State<RedesignResultPage> {
   bool _isSaving = false;
   bool _isSharing = false;
 
+  @override
+  void initState() {
+    super.initState();
+    unawaited(AnalyticsService.instance.logScreen('redesign_result'));
+  }
+
   Future<void> _shareImage(BuildContext anchorContext) async {
     if (_isSharing) {
       return;
@@ -47,6 +56,9 @@ class _RedesignResultPageState extends State<RedesignResultPage> {
       await ShareHelper.shareImage(
         filePath: widget.afterPath,
         anchorContext: anchorContext,
+      );
+      unawaited(
+        AnalyticsService.instance.logDesignShared(source: 'result'),
       );
     } catch (_) {
       if (mounted) {

@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:home_ai/core/router/app_router.dart';
+import 'package:home_ai/core/service/analytics/analytics_service.dart';
 import 'package:home_ai/core/theme/app_animations.dart';
 import 'package:home_ai/core/theme/app_colors.dart';
 import 'package:home_ai/core/theme/app_decorations.dart';
@@ -23,7 +26,10 @@ class HomeTopBar extends StatelessWidget {
         children: [
           CupertinoButton(
             padding: EdgeInsets.zero,
-            onPressed: () => context.router.push(const SettingsRoute()),
+            onPressed: () {
+              unawaited(AnalyticsService.instance.logSettingsOpened());
+              context.router.push(const SettingsRoute());
+            },
             child: Container(
               width: 44,
               height: 44,

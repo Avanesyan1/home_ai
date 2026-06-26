@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:home_ai/core/config/app_links.dart';
 import 'package:home_ai/core/l10n/locale_keys.dart';
 import 'package:home_ai/core/router/app_router.dart';
+import 'package:home_ai/core/service/analytics/analytics_service.dart';
 import 'package:home_ai/core/service/premium/premium_service.dart';
 import 'package:home_ai/core/theme/app_colors.dart';
 import 'package:home_ai/core/theme/app_spacing.dart';
@@ -46,6 +47,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
   @override
   void initState() {
     super.initState();
+    unawaited(AnalyticsService.instance.logScreen('onboarding'));
+    unawaited(AnalyticsService.instance.logOnboardingStarted());
+    unawaited(AnalyticsService.instance.logOnboardingSlideViewed(0));
     _premium.loadProducts();
     _premium.havePremium.addListener(_onPremiumChanged);
     _premium.products.addListener(_onProductsChanged);
@@ -68,14 +72,18 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   void _onPremiumChanged() {
     if (mounted && _premium.havePremium.value) {
-      unawaited(_finishOnboarding());
+      unawaited(_finishOnboarding(method: 'purchase'));
     }
   }
 
   void _onPageChanged(int index) {
     setState(() => _currentPage = index);
+    unawaited(AnalyticsService.instance.logOnboardingSlideViewed(index));
 
     if (index == _paywallPageIndex) {
+      unawaited(
+        AnalyticsService.instance.logPaywallViewed(source: 'onboarding'),
+      );
       _premium.loadProducts();
       _startCloseTimer();
     } else {
@@ -93,7 +101,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
     });
   }
 
-  Future<void> _finishOnboarding() async {
+  Future<void> _finishOnboarding({String method = 'skip'}) async {
+    unawaited(AnalyticsService.instance.logOnboardingCompleted(method: method));
     await OnboardingStorage.markCompleted();
     if (!mounted) {
       return;
@@ -180,6 +189,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
     }
 
     setState(() => _isPurchasing = true);
+    unawaited(
+      AnalyticsService.instance.logPurchaseStarted(
+        source: 'onboarding',
+        plan: 'weekly',
+        productId: product.identifier,
+      ),
+    );
     final success = await _premium.buyProduct(product);
     if (!mounted) {
       return;
@@ -187,14 +203,26 @@ class _OnboardingPageState extends State<OnboardingPage> {
     setState(() => _isPurchasing = false);
 
     if (success) {
-      await _finishOnboarding();
+      unawaited(
+        AnalyticsService.instance.logPurchaseSuccess(
+          source: 'onboarding',
+          productId: product.identifier,
+        ),
+      );
+      await _finishOnboarding(method: 'purchase');
     }
   }
 
   Future<void> _restore() async {
+    unawaited(
+      AnalyticsService.instance.logPaywallRestoreTapped(source: 'onboarding'),
+    );
     await _premium.restorePurchase(context);
     if (mounted && _premium.havePremium.value) {
-      await _finishOnboarding();
+      unawaited(
+        AnalyticsService.instance.logRestoreSuccess(source: 'onboarding'),
+      );
+      await _finishOnboarding(method: 'restore');
     }
   }
 
@@ -280,7 +308,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   child: CupertinoButton(
                     padding: const EdgeInsets.all(6),
                     minimumSize: Size.zero,
-                    onPressed: _finishOnboarding,
+                    onPressed: () {
+                      unawaited(AnalyticsService.instance.logOnboardingSkipped());
+                      unawaited(_finishOnboarding(method: 'skip'));
+                    },
                     child: Container(
                       width: 30,
                       height: 30,
@@ -312,12 +343,20 @@ class _OnboardingPageState extends State<OnboardingPage> {
       children: [
         _FooterLink(
           label: LocaleKeys.paywallTerms.tr(),
-          onPressed: () => SettingsActions.openLink(context, AppLinks.terms),
+          onPressed: () => SettingsActions.openLink(
+            context,
+            AppLinks.terms,
+            link: 'terms',
+          ),
         ),
         _FooterLink(
           label: LocaleKeys.paywallPrivacy.tr(),
           onPressed: () =>
-              SettingsActions.openLink(context, AppLinks.privacy),
+              SettingsActions.openLink(
+                context,
+                AppLinks.privacy,
+                link: 'privacy',
+              ),
         ),
         _FooterLink(
           label: LocaleKeys.paywallRestore.tr(),

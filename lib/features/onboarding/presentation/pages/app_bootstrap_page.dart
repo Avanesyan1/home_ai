@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:home_ai/core/router/app_router.dart';
+import 'package:home_ai/core/service/analytics/analytics_service.dart';
 import 'package:home_ai/core/service/update/app_update_service.dart';
 import 'package:home_ai/core/theme/app_colors.dart';
 import 'package:home_ai/core/widgets/app_background.dart';
@@ -18,6 +21,8 @@ class _AppBootstrapPageState extends State<AppBootstrapPage> {
   @override
   void initState() {
     super.initState();
+    unawaited(AnalyticsService.instance.logScreen('bootstrap'));
+    unawaited(AnalyticsService.instance.logAppOpen());
     WidgetsBinding.instance.addPostFrameCallback((_) => _redirect());
   }
 
@@ -34,6 +39,7 @@ class _AppBootstrapPageState extends State<AppBootstrapPage> {
     }
 
     if (AppUpdateService.instance.isUpdateRequired) {
+      unawaited(AnalyticsService.instance.logBootstrapRoute('force_update'));
       await context.router.replace(const ForceUpdateRoute());
       return;
     }
@@ -44,8 +50,10 @@ class _AppBootstrapPageState extends State<AppBootstrapPage> {
     }
 
     if (completed) {
+      unawaited(AnalyticsService.instance.logBootstrapRoute('main'));
       await context.router.replace(const MainShellRoute());
     } else {
+      unawaited(AnalyticsService.instance.logBootstrapRoute('onboarding'));
       await context.router.replace(const OnboardingRoute());
     }
   }

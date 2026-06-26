@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:home_ai/core/router/app_router.dart';
+import 'package:home_ai/core/service/analytics/analytics_service.dart';
 import 'package:home_ai/core/service/generation/generation_limit_service.dart';
+import 'package:home_ai/features/paywall/presentation/paywall_entry.dart';
 import 'package:home_ai/features/redesign/domain/entities/redesign_category.dart';
 import 'package:home_ai/features/redesign/domain/entities/redesign_draft.dart';
 import 'package:home_ai/features/redesign/domain/redesign_options.dart';
@@ -39,6 +41,10 @@ class _RedesignFlowPageState extends State<RedesignFlowPage> {
   @override
   void initState() {
     super.initState();
+    unawaited(AnalyticsService.instance.logScreen('redesign_flow'));
+    unawaited(
+      AnalyticsService.instance.logRedesignFlowStarted(widget.category.name),
+    );
     _draft = RedesignDraft(category: widget.category);
   }
 
@@ -83,6 +89,12 @@ class _RedesignFlowPageState extends State<RedesignFlowPage> {
 
   void _goToStep(int step) {
     setState(() => _currentStep = step);
+    unawaited(
+      AnalyticsService.instance.logRedesignStepCompleted(
+        category: widget.category.name,
+        step: step,
+      ),
+    );
     _pageController.animateToPage(
       step,
       duration: const Duration(milliseconds: 280),
@@ -97,6 +109,8 @@ class _RedesignFlowPageState extends State<RedesignFlowPage> {
     }
 
     if (!canGenerate) {
+      unawaited(AnalyticsService.instance.logGenerationLimitReached());
+      PaywallEntry.source = 'generation_limit';
       await context.router.push(const PaywallRoute());
       return;
     }

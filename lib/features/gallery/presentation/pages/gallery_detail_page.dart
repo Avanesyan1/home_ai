@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
@@ -6,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:home_ai/core/helpers/gallery_helper.dart';
 import 'package:home_ai/core/helpers/share_helper.dart';
 import 'package:home_ai/core/l10n/locale_keys.dart';
+import 'package:home_ai/core/service/analytics/analytics_service.dart';
 import 'package:home_ai/core/theme/app_colors.dart';
 import 'package:home_ai/core/theme/app_decorations.dart';
 import 'package:home_ai/core/theme/app_spacing.dart';
@@ -37,6 +40,7 @@ class _GalleryDetailPageState extends State<GalleryDetailPage> {
   @override
   void initState() {
     super.initState();
+    unawaited(AnalyticsService.instance.logScreen('gallery_detail'));
     _loadDesign();
   }
 
@@ -64,6 +68,9 @@ class _GalleryDetailPageState extends State<GalleryDetailPage> {
       await ShareHelper.shareImage(
         filePath: design.afterPath,
         anchorContext: anchorContext,
+      );
+      unawaited(
+        AnalyticsService.instance.logDesignShared(source: 'gallery_detail'),
       );
     } catch (_) {
       if (mounted) {
@@ -142,6 +149,7 @@ class _GalleryDetailPageState extends State<GalleryDetailPage> {
     }
 
     await GalleryRepository.instance.delete(widget.designId);
+    unawaited(AnalyticsService.instance.logDesignDeleted());
     if (mounted) {
       context.router.pop();
     }

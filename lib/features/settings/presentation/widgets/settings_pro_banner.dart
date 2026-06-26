@@ -1,14 +1,18 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:home_ai/core/config/app_assets.dart';
 import 'package:home_ai/core/l10n/locale_keys.dart';
 import 'package:home_ai/core/router/app_router.dart';
+import 'package:home_ai/core/service/analytics/analytics_service.dart';
 import 'package:home_ai/core/theme/app_animations.dart';
 import 'package:home_ai/core/theme/app_colors.dart';
 import 'package:home_ai/core/theme/app_decorations.dart';
 import 'package:home_ai/core/theme/app_spacing.dart';
 import 'package:home_ai/core/theme/app_text_styles.dart';
+import 'package:home_ai/features/paywall/presentation/paywall_entry.dart';
 
 class SettingsProBanner extends StatelessWidget {
   const SettingsProBanner({super.key});
@@ -21,7 +25,11 @@ class SettingsProBanner extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: AppSpacing.lg),
       child: CupertinoButton(
         padding: EdgeInsets.zero,
-        onPressed: () => context.router.push(const PaywallRoute()),
+        onPressed: () {
+          unawaited(AnalyticsService.instance.logSettingsLinkOpened('pro_banner'));
+          PaywallEntry.source = 'settings';
+          context.router.push(const PaywallRoute());
+        },
         child: DecoratedBox(
           decoration: AppDecorations.imageCard(radius: AppSpacing.radiusLg),
           child: ClipRRect(

@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:home_ai/core/config/app_links.dart';
 import 'package:home_ai/core/l10n/locale_keys.dart';
+import 'package:home_ai/core/service/analytics/analytics_service.dart';
 import 'package:home_ai/core/theme/app_animations.dart';
 import 'package:home_ai/core/theme/app_colors.dart';
 import 'package:home_ai/core/theme/app_spacing.dart';
@@ -11,10 +14,23 @@ import 'package:home_ai/core/utils/link_launcher.dart';
 import 'package:home_ai/core/widgets/app_background.dart';
 
 @RoutePage()
-class ForceUpdatePage extends StatelessWidget {
+class ForceUpdatePage extends StatefulWidget {
   const ForceUpdatePage({super.key});
 
+  @override
+  State<ForceUpdatePage> createState() => _ForceUpdatePageState();
+}
+
+class _ForceUpdatePageState extends State<ForceUpdatePage> {
+  @override
+  void initState() {
+    super.initState();
+    unawaited(AnalyticsService.instance.logScreen('force_update'));
+    unawaited(AnalyticsService.instance.logForceUpdateViewed());
+  }
+
   Future<void> _openStore() async {
+    unawaited(AnalyticsService.instance.logForceUpdateStoreTapped());
     await LinkLauncher.open(AppLinks.appStore);
   }
 

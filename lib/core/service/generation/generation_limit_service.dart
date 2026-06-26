@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:home_ai/core/logger/app_logger.dart';
+import 'package:home_ai/core/service/analytics/analytics_service.dart';
 import 'package:home_ai/core/service/premium/premium_service.dart';
 
 /// Tracks free generation usage in secure storage.
@@ -52,6 +55,9 @@ class GenerationLimitService {
         key: _usedCountKey,
         value: (used + 1).toString(),
       );
+      if (used + 1 >= freeLimit) {
+        unawaited(AnalyticsService.instance.logGenerationLimitReached());
+      }
     } catch (error) {
       AppLogger.instance.warning('GenerationLimit: write failed — $error');
     }

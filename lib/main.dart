@@ -11,6 +11,7 @@ import 'package:home_ai/firebase_options.dart';
 import 'package:home_ai/presentation/services/gemini_key_service.dart';
 import 'package:home_ai/core/service/premium/premium_service.dart';
 import 'package:home_ai/features/gallery/data/gallery_repository.dart';
+import 'package:home_ai/core/service/analytics/analytics_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,4 +57,5 @@ void main() async {
   // Network-bound (RevenueCat) — must NOT block the first frame, otherwise a
   // slow/blocked network leaves the app on a blank screen forever.
   unawaited(PremiumService.instance.init());
+  unawaited(AnalyticsService.instance.init());
 }
